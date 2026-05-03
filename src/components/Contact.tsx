@@ -1,10 +1,10 @@
 const Contact = () => (
-  <section id="reservar" className="py-24 px-6 bg-warm-surface">
+  <section id="takeaway" className="py-24 px-6 bg-warm-surface">
     <div className="max-w-2xl mx-auto text-center">
-      <p className="text-primary text-sm uppercase tracking-[0.3em] mb-4 font-semibold">Reservas</p>
-      <h2 className="text-4xl font-serif font-bold mb-6 text-foreground">Reserve a sua mesa</h2>
+      <p className="text-primary text-sm uppercase tracking-[0.3em] mb-4 font-semibold">Take Away</p>
+      <h2 className="text-4xl font-serif font-bold mb-6 text-foreground">Encomende para levar</h2>
       <p className="text-muted-foreground mb-10">
-        Para reservas, entre em contacto connosco por telefone. Teremos todo o gosto em recebê-lo.
+        Ligue-nos e faça a sua encomenda. Preparamos tudo com o mesmo carinho para si levar.
       </p>
       <a
         href="tel:258826761"

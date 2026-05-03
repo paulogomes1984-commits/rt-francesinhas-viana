@@ -6,7 +6,7 @@ const links = [
   { label: "Sobre", href: "#sobre" },
   { label: "Horário", href: "#horario" },
   { label: "Críticas", href: "#criticas" },
-  { label: "Reservar", href: "#reservar" },
+  { label: "Take Away", href: "#takeaway" },
 ];
 
 const Navbar = () => {

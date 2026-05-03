@@ -2,7 +2,7 @@ import heroImg from "@/assets/hero-francesinha.jpg";
 import logoImg from "@/assets/rt-logo.png";
 
 const Hero = () => (
-  <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+  <section className="relative h-[75vh] flex items-center justify-center overflow-hidden">
     <div className="absolute inset-0">
       <img src={heroImg} alt="Francesinha RT" width={1920} height={1080} className="w-full h-full object-cover" />
       <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/60 to-background" />
@@ -18,10 +18,10 @@ const Hero = () => (
       </p>
       <div className="divider-gold w-32 mx-auto my-8" />
       <a
-        href="#reservar"
+        href="#takeaway"
         className="inline-block px-8 py-3 bg-primary text-primary-foreground font-semibold rounded-sm tracking-wider text-sm uppercase hover:brightness-110 transition-all duration-300"
       >
-        Reservar Mesa
+        Encomendar Take Away
       </a>
     </div>
   </section>
