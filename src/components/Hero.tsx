@@ -18,10 +18,10 @@ const Hero = () => (
       </p>
       <div className="divider-gold w-32 mx-auto my-8" />
       <a
-        href="#reservar"
+        href="#takeaway"
         className="inline-block px-8 py-3 bg-primary text-primary-foreground font-semibold rounded-sm tracking-wider text-sm uppercase hover:brightness-110 transition-all duration-300"
       >
-        Reservar Mesa
+        Encomendar Take Away
       </a>
     </div>
   </section>
