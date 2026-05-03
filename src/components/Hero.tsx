@@ -2,7 +2,7 @@ import heroImg from "@/assets/hero-francesinha.jpg";
 import logoImg from "@/assets/rt-logo.png";
 
 const Hero = () => (
-  <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+  <section className="relative h-[75vh] flex items-center justify-center overflow-hidden">
     <div className="absolute inset-0">
       <img src={heroImg} alt="Francesinha RT" width={1920} height={1080} className="w-full h-full object-cover" />
       <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/60 to-background" />
