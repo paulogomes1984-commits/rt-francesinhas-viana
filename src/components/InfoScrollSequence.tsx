@@ -129,8 +129,8 @@ const InfoScrollSequence = ({ children }: InfoScrollSequenceProps) => {
           ref={canvasRef}
           className={`absolute inset-0 h-full w-full transition-opacity duration-500 ${loaded ? "opacity-100" : "opacity-0"}`}
         />
-        <div className="absolute inset-0 bg-background/70" />
-        <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/55 to-background/90" />
+        <div className="absolute inset-0 bg-background/55" />
+        <div className="absolute inset-0 bg-gradient-to-b from-background/65 via-background/35 to-background/75" />
       </div>
       <div className="relative z-10 -mt-[100dvh]">{children}</div>
     </div>
