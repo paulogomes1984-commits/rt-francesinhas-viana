@@ -10,7 +10,7 @@ const reviews = [
 ];
 
 const Reviews = () => (
-  <section id="criticas" className="py-24 px-6">
+  <section id="criticas" className="flex min-h-[115dvh] items-center px-6 py-24">
     <div className="max-w-6xl mx-auto">
       <div className="text-center mb-16">
         <p className="text-primary text-sm uppercase tracking-[0.3em] mb-4 font-semibold">Testemunhos</p>
@@ -20,7 +20,7 @@ const Reviews = () => (
         {reviews.map((r, i) => (
           <div
             key={i}
-            className="bg-card p-6 rounded-sm border border-border hover:border-gold transition-colors duration-300 opacity-0 animate-fade-up"
+            className="rounded-sm border border-border bg-card/90 p-6 opacity-0 backdrop-blur-sm animate-fade-up transition-colors duration-300 hover:border-gold"
             style={{ animationDelay: `${0.1 * i}s` }}
           >
             <div className="flex gap-1 mb-4">
