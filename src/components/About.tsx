@@ -1,7 +1,7 @@
 import interiorImg from "@/assets/restaurant-interior.jpg";
 
 const About = () => (
-  <section id="sobre" className="py-24 px-6">
+  <section id="sobre" className="relative z-20 -mt-[10dvh] bg-gradient-to-b from-transparent via-background to-background px-6 pb-24 pt-[18dvh] md:-mt-[14dvh] md:pt-[22dvh]">
     <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-16 items-center">
       <div className="opacity-0 animate-fade-up" style={{ animationDelay: "0.2s" }}>
         <p className="text-primary text-sm uppercase tracking-[0.3em] mb-4 font-semibold">Sobre Nós</p>

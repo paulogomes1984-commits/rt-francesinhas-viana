@@ -3,9 +3,10 @@ import { ChevronDown } from "lucide-react";
 import logoImg from "@/assets/rt-logo.png";
 import sequenceAsset from "@/assets/rt-francesinha-scroll-sequence.jpg.asset.json";
 import posterAsset from "@/assets/rt-francesinha-scroll-poster.jpg.asset.json";
+import finalFrameAsset from "@/assets/rt-francesinha-final.jpg.asset.json";
 import { Button } from "@/components/ui/button";
 
-const FRAME_COUNT = 40;
+const LAST_FRAME = 37;
 const SPRITE_COLUMNS = 5;
 const FRAME_WIDTH = 800;
 const FRAME_HEIGHT = 450;
@@ -86,14 +87,14 @@ const Hero = () => {
       rafRef.current = null;
       const section = sectionRef.current;
       if (!section || reducedMotion) {
-        drawFrame(0);
+        drawFrame(reducedMotion ? LAST_FRAME : 0);
         return;
       }
 
       const rect = section.getBoundingClientRect();
       const scrollableDistance = Math.max(1, section.offsetHeight - window.innerHeight);
       const progress = Math.min(1, Math.max(0, -rect.top / scrollableDistance));
-      const nextFrame = Math.min(FRAME_COUNT - 1, Math.round(progress * (FRAME_COUNT - 1)));
+      const nextFrame = Math.min(LAST_FRAME, Math.round(progress * LAST_FRAME));
       if (nextFrame !== frameRef.current) {
         frameRef.current = nextFrame;
         drawFrame(nextFrame);
@@ -117,12 +118,12 @@ const Hero = () => {
   return (
     <section
       ref={sectionRef}
-      className={reducedMotion ? "relative h-[100dvh]" : "relative h-[300dvh] md:h-[340dvh]"}
+      className={reducedMotion ? "relative h-[100dvh]" : "relative h-[185dvh] md:h-[205dvh]"}
       aria-label="Francesinha RT com molho a ser servido"
     >
       <div className="sticky top-0 h-[100dvh] min-h-[36rem] overflow-hidden bg-background">
         <img
-          src={posterAsset.url}
+          src={reducedMotion ? finalFrameAsset.url : posterAsset.url}
           alt="Francesinha RT acabada de servir"
           className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-500 ${loaded ? "opacity-0" : "opacity-100"}`}
           loading="eager"
@@ -132,7 +133,7 @@ const Hero = () => {
           className={`absolute inset-0 h-full w-full transition-opacity duration-500 ${loaded ? "opacity-100" : "opacity-0"}`}
           aria-hidden="true"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/35 to-background/90" />
+        <div className="absolute inset-0 bg-gradient-to-b from-background/85 via-background/55 to-background/95" />
 
         <div className="relative z-10 flex h-full flex-col items-center justify-center px-6 pb-8 pt-20 text-center">
           <div className="animate-fade-up max-w-3xl">
