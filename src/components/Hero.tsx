@@ -4,7 +4,6 @@ import logoImg from "@/assets/rt-logo.png";
 import sequenceAsset from "@/assets/rt-francesinha-scroll-sequence.jpg.asset.json";
 import posterAsset from "@/assets/rt-francesinha-scroll-poster.jpg.asset.json";
 import finalFrameAsset from "@/assets/rt-francesinha-final.jpg.asset.json";
-import { Button } from "@/components/ui/button";
 
 const LAST_FRAME = 37;
 const SPRITE_COLUMNS = 5;
@@ -14,6 +13,8 @@ const FRAME_HEIGHT = 450;
 const Hero = () => {
   const sectionRef = useRef<HTMLElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const logoRef = useRef<HTMLImageElement>(null);
+  const textRef = useRef<HTMLDivElement>(null);
   const spriteRef = useRef<HTMLImageElement | null>(null);
   const frameRef = useRef(-1);
   const rafRef = useRef<number | null>(null);
@@ -95,6 +96,18 @@ const Hero = () => {
       const scrollableDistance = Math.max(1, section.offsetHeight - window.innerHeight);
       const progress = Math.min(1, Math.max(0, -rect.top / scrollableDistance));
       const nextFrame = Math.min(LAST_FRAME, Math.round(progress * LAST_FRAME));
+
+      const logoProgress = Math.min(1, Math.max(0, (progress - 0.08) / 0.18));
+      const textProgress = Math.min(1, Math.max(0, (progress - 0.28) / 0.22));
+      if (logoRef.current) {
+        logoRef.current.style.opacity = String(logoProgress);
+        logoRef.current.style.transform = `translateY(${(1 - logoProgress) * 24}px) scale(${0.9 + logoProgress * 0.1})`;
+      }
+      if (textRef.current) {
+        textRef.current.style.opacity = String(textProgress);
+        textRef.current.style.transform = `translateY(${(1 - textProgress) * 28}px)`;
+      }
+
       if (nextFrame !== frameRef.current) {
         frameRef.current = nextFrame;
         drawFrame(nextFrame);
@@ -136,19 +149,25 @@ const Hero = () => {
         <div className="absolute inset-0 bg-gradient-to-b from-background/85 via-background/55 to-background/95" />
 
         <div className="relative z-10 flex h-full flex-col items-center justify-center px-6 pb-8 pt-20 text-center">
-          <div className="animate-fade-up max-w-3xl">
-            <img src={logoImg} alt="Logótipo RT Francesinhas" className="mx-auto mb-6 h-24 w-24 rounded-full object-cover shadow-elegant md:h-28 md:w-28" />
-            <h1 className="mb-4 text-5xl font-bold md:text-7xl">
-              <span className="text-gradient-gold">RT</span>{" "}
-              <span className="text-foreground">Francesinhas</span>
-            </h1>
-            <p className="mx-auto mb-3 max-w-xl text-lg font-light text-foreground/90 md:text-xl">
-              A alma do Minho entre fatias. O molho que Viana não esquece.
-            </p>
-            <div className="divider-gold mx-auto my-7 w-32" />
-            <Button asChild size="lg" className="rounded-sm font-semibold uppercase tracking-wider shadow-gold">
-              <a href="#takeaway">Encomendar Take Away</a>
-            </Button>
+          <div className="max-w-3xl">
+            <img
+              ref={logoRef}
+              src={logoImg}
+              alt="Logótipo RT Francesinhas"
+              className={`mx-auto mb-6 h-24 w-24 rounded-full object-cover shadow-elegant will-change-transform md:h-28 md:w-28 ${reducedMotion ? "opacity-100" : "opacity-0"}`}
+            />
+            <div
+              ref={textRef}
+              className={`will-change-transform ${reducedMotion ? "opacity-100" : "opacity-0"}`}
+            >
+              <h1 className="mb-4 text-5xl font-bold md:text-7xl">
+                <span className="text-gradient-gold">RT</span>{" "}
+                <span className="text-foreground">Francesinhas</span>
+              </h1>
+              <p className="mx-auto max-w-xl text-lg font-light text-foreground/90 md:text-xl">
+                A alma do Minho entre fatias. O molho que Viana não esquece.
+              </p>
+            </div>
           </div>
 
           {!reducedMotion && (
