@@ -15,6 +15,7 @@ const Hero = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const logoRef = useRef<HTMLImageElement>(null);
   const textRef = useRef<HTMLDivElement>(null);
+  const takeawayRef = useRef<HTMLAnchorElement>(null);
   const spriteRef = useRef<HTMLImageElement | null>(null);
   const frameRef = useRef(-1);
   const rafRef = useRef<number | null>(null);
@@ -99,6 +100,7 @@ const Hero = () => {
 
       const logoProgress = Math.min(1, Math.max(0, (progress - 0.08) / 0.18));
       const textProgress = Math.min(1, Math.max(0, (progress - 0.28) / 0.22));
+      const takeawayProgress = Math.min(1, Math.max(0, (progress - 0.48) / 0.2));
       if (logoRef.current) {
         logoRef.current.style.opacity = String(logoProgress);
         logoRef.current.style.transform = `translateY(${(1 - logoProgress) * 24}px) scale(${0.9 + logoProgress * 0.1})`;
@@ -106,6 +108,10 @@ const Hero = () => {
       if (textRef.current) {
         textRef.current.style.opacity = String(textProgress);
         textRef.current.style.transform = `translateY(${(1 - textProgress) * 28}px)`;
+      }
+      if (takeawayRef.current) {
+        takeawayRef.current.style.opacity = String(takeawayProgress);
+        takeawayRef.current.style.transform = `translateY(${(1 - takeawayProgress) * 24}px)`;
       }
 
       if (nextFrame !== frameRef.current) {
@@ -168,6 +174,13 @@ const Hero = () => {
                 A alma do Minho entre fatias. O molho que Viana não esquece.
               </p>
             </div>
+            <a
+              ref={takeawayRef}
+              href="#takeaway"
+              className={`mt-8 inline-block rounded-sm bg-primary px-8 py-4 text-sm font-semibold uppercase tracking-wider text-primary-foreground transition-[opacity,transform,filter] duration-300 hover:brightness-110 ${reducedMotion ? "opacity-100" : "opacity-0"}`}
+            >
+              Encomendar Take Away
+            </a>
           </div>
 
           {!reducedMotion && (

@@ -1,16 +1,15 @@
 import { Clock, MapPin, Phone } from "lucide-react";
-import contactosImg from "@/assets/contactos.jpg";
 
 const Schedule = () => (
-  <section id="horario" className="py-24 px-6 bg-warm-surface">
+  <section id="horario" className="flex min-h-[100dvh] items-center px-6 py-24">
     <div className="max-w-6xl mx-auto">
       <div className="text-center mb-12">
         <p className="text-primary text-sm uppercase tracking-[0.3em] mb-4 font-semibold">Informações</p>
         <h2 className="text-4xl font-serif font-bold text-foreground">Visite-nos</h2>
       </div>
 
-      <div className="grid md:grid-cols-2 gap-12 items-center">
-        <div className="grid sm:grid-cols-3 gap-10">
+      <div className="mx-auto max-w-4xl">
+        <div className="grid gap-10 sm:grid-cols-3">
           <div className="flex flex-col items-center gap-3">
             <Clock className="w-6 h-6 text-primary" />
             <h3 className="font-serif text-lg font-semibold text-foreground">Horário</h3>
@@ -37,14 +36,6 @@ const Schedule = () => (
           </div>
         </div>
 
-        <div className="rounded-sm overflow-hidden">
-          <img
-            src={contactosImg}
-            alt="Pratos do RT Francesinhas"
-            loading="lazy"
-            className="w-full h-[380px] object-cover hover:scale-105 transition-transform duration-700 brightness-[0.85] sepia-[0.15] saturate-[1.1]"
-          />
-        </div>
       </div>
 
       <div className="divider-gold w-48 mx-auto mt-12" />
