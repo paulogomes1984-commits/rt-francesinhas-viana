@@ -125,7 +125,7 @@ const Hero = () => {
           src={posterAsset.url}
           alt="Francesinha RT acabada de servir"
           className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-500 ${loaded ? "opacity-0" : "opacity-100"}`}
-          fetchPriority="high"
+          loading="eager"
         />
         <canvas
           ref={canvasRef}
