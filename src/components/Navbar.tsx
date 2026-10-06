@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
+import { motion, useReducedMotion } from "framer-motion";
+import { Button } from "@/components/ui/button";
 import logoImg from "@/assets/rt-logo.png";
 
 const links = [
@@ -11,9 +13,10 @@ const links = [
 
 const Navbar = () => {
   const [open, setOpen] = useState(false);
+  const reducedMotion = useReducedMotion();
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border/50">
+    <motion.nav initial={reducedMotion ? false : { opacity: 0, y: -12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border/50">
       <div className="max-w-6xl mx-auto flex items-center justify-between px-6 py-3">
         <a href="#" className="flex items-center gap-3">
           <img src={logoImg} alt="RT" className="w-9 h-9 rounded-full object-cover" />
@@ -26,9 +29,9 @@ const Navbar = () => {
             </a>
           ))}
         </div>
-        <button onClick={() => setOpen(!open)} className="md:hidden text-foreground">
+        <Button variant="ghost" size="icon" aria-label={open ? "Fechar menu" : "Abrir menu"} aria-expanded={open} onClick={() => setOpen(!open)} className="md:hidden text-foreground">
           {open ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-        </button>
+        </Button>
       </div>
       {open && (
         <div className="md:hidden bg-background border-t border-border px-6 py-4 flex flex-col gap-4">
@@ -39,7 +42,7 @@ const Navbar = () => {
           ))}
         </div>
       )}
-    </nav>
+    </motion.nav>
   );
 };
 
