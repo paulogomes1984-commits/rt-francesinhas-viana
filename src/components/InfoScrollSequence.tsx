@@ -17,6 +17,8 @@ const InfoScrollSequence = ({ children }: InfoScrollSequenceProps) => {
   const spriteRef = useRef<HTMLImageElement | null>(null);
   const frameRef = useRef(-1);
   const rafRef = useRef<number | null>(null);
+  const targetFrameRef = useRef(0);
+  const lastTimeRef = useRef<number | null>(null);
   const [loaded, setLoaded] = useState(false);
   const [reducedMotion, setReducedMotion] = useState(false);
 
@@ -40,21 +42,26 @@ const InfoScrollSequence = ({ children }: InfoScrollSequenceProps) => {
     const scale = Math.max(width / FRAME_WIDTH, height / FRAME_HEIGHT);
     const drawWidth = FRAME_WIDTH * scale;
     const drawHeight = FRAME_HEIGHT * scale;
-    const sourceX = (frame % SPRITE_COLUMNS) * FRAME_WIDTH;
-    const sourceY = Math.floor(frame / SPRITE_COLUMNS) * FRAME_HEIGHT;
-
     context.clearRect(0, 0, width, height);
-    context.drawImage(
-      sprite,
-      sourceX,
-      sourceY,
-      FRAME_WIDTH,
-      FRAME_HEIGHT,
-      (width - drawWidth) / 2,
-      (height - drawHeight) / 2,
-      drawWidth,
-      drawHeight,
-    );
+    const lower = Math.floor(frame);
+    const blend = frame - lower;
+    const paint = (index: number, opacity: number) => {
+      context.globalAlpha = opacity;
+      context.drawImage(
+        sprite,
+        (index % SPRITE_COLUMNS) * FRAME_WIDTH,
+        Math.floor(index / SPRITE_COLUMNS) * FRAME_HEIGHT,
+        FRAME_WIDTH,
+        FRAME_HEIGHT,
+        (width - drawWidth) / 2,
+        (height - drawHeight) / 2,
+        drawWidth,
+        drawHeight,
+      );
+    };
+    paint(lower, 1);
+    if (blend > 0 && lower < LAST_FRAME) paint(lower + 1, blend);
+    context.globalAlpha = 1;
   }, []);
 
   useEffect(() => {
@@ -82,8 +89,25 @@ const InfoScrollSequence = ({ children }: InfoScrollSequenceProps) => {
   }, [drawFrame, reducedMotion]);
 
   useEffect(() => {
-    const update = () => {
+    const animate = (time: number) => {
       rafRef.current = null;
+      const elapsed = Math.min(64, lastTimeRef.current === null ? 16 : time - lastTimeRef.current);
+      lastTimeRef.current = time;
+      const current = Math.max(0, frameRef.current);
+      const difference = targetFrameRef.current - current;
+      const next = Math.abs(difference) < 0.005
+        ? targetFrameRef.current
+        : current + difference * (1 - Math.exp(-elapsed / 85));
+      frameRef.current = next;
+      drawFrame(next);
+      if (Math.abs(targetFrameRef.current - next) >= 0.005) {
+        rafRef.current = requestAnimationFrame(animate);
+      } else {
+        lastTimeRef.current = null;
+      }
+    };
+
+    const update = () => {
       const section = sectionRef.current;
       if (!section) return;
 
@@ -95,24 +119,24 @@ const InfoScrollSequence = ({ children }: InfoScrollSequenceProps) => {
       const rect = section.getBoundingClientRect();
       const distance = Math.max(1, section.offsetHeight - window.innerHeight);
       const progress = Math.min(1, Math.max(0, -rect.top / distance));
-      const nextFrame = Math.round(progress * LAST_FRAME);
-      if (nextFrame !== frameRef.current) {
-        frameRef.current = nextFrame;
-        drawFrame(nextFrame);
-      }
+      targetFrameRef.current = progress * LAST_FRAME;
+      if (rafRef.current === null) rafRef.current = requestAnimationFrame(animate);
     };
 
-    const requestUpdate = () => {
-      if (rafRef.current === null) rafRef.current = requestAnimationFrame(update);
+    const resize = () => {
+      drawFrame(Math.max(0, frameRef.current));
+      update();
     };
 
     update();
-    window.addEventListener("scroll", requestUpdate, { passive: true });
-    window.addEventListener("resize", requestUpdate);
+    window.addEventListener("scroll", update, { passive: true });
+    window.addEventListener("resize", resize);
     return () => {
-      window.removeEventListener("scroll", requestUpdate);
-      window.removeEventListener("resize", requestUpdate);
+      window.removeEventListener("scroll", update);
+      window.removeEventListener("resize", resize);
       if (rafRef.current !== null) cancelAnimationFrame(rafRef.current);
+      rafRef.current = null;
+      lastTimeRef.current = null;
     };
   }, [drawFrame, loaded, reducedMotion]);
 
