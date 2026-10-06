@@ -1,9 +1,18 @@
 import ScrollReveal from "@/components/ScrollReveal";
 import { Button } from "@/components/ui/button";
+import takeawayTexture from "@/assets/takeaway-texture.jpg.asset.json";
 
 const Contact = () => (
-  <section id="takeaway" className="py-24 px-6 bg-warm-surface">
-    <div className="max-w-2xl mx-auto text-center">
+  <section id="takeaway" className="relative py-24 px-6 bg-warm-surface overflow-hidden">
+    {/* Textura de fundo: apenas sugere o interior, muito escura */}
+    <div
+      className="absolute inset-0 bg-cover bg-center pointer-events-none"
+      style={{ backgroundImage: `url(${takeawayTexture.url})` }}
+      aria-hidden="true"
+    />
+    <div className="absolute inset-0 bg-background/85 pointer-events-none" aria-hidden="true" />
+
+    <div className="relative max-w-2xl mx-auto text-center">
       <ScrollReveal>
       <p className="text-primary text-sm uppercase tracking-[0.3em] mb-4 font-semibold">Take Away</p>
       <h2 className="text-4xl font-serif font-bold mb-6 text-foreground">Encomende para levar</h2>
