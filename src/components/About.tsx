@@ -7,6 +7,8 @@ const About = () => (
       <div>
         <ScrollReveal>
         <p className="text-primary text-sm uppercase tracking-[0.3em] mb-4 font-semibold">Sobre Nós</p>
+        </ScrollReveal>
+        <ScrollReveal delay={0.08}>
         <h2 className="text-4xl md:text-5xl font-serif font-bold mb-6 text-foreground">
           Uma experiência <span className="text-gradient-gold">única</span> em Viana
         </h2>

@@ -10,11 +10,13 @@ const Contact = () => (
       style={{ backgroundImage: `url(${takeawayTexture.url})` }}
       aria-hidden="true"
     />
-    <div className="absolute inset-0 bg-background/85 pointer-events-none" aria-hidden="true" />
+    <div className="absolute inset-0 bg-background/95 pointer-events-none" aria-hidden="true" />
 
     <div className="relative max-w-2xl mx-auto text-center">
       <ScrollReveal>
       <p className="text-primary text-sm uppercase tracking-[0.3em] mb-4 font-semibold">Take Away</p>
+      </ScrollReveal>
+      <ScrollReveal delay={0.08}>
       <h2 className="text-4xl font-serif font-bold mb-6 text-foreground">Encomende para levar</h2>
       </ScrollReveal>
       <ScrollReveal>
@@ -31,7 +33,7 @@ const Contact = () => (
       </a>
       </Button>
       </ScrollReveal>
-      <div className="mt-16 rounded-sm overflow-hidden">
+      <ScrollReveal className="mt-16 rounded-sm overflow-hidden">
         <iframe
           src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2960.5!2d-8.8286!3d41.6936!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xd25b42!2sR.+E%C3%A7a+de+Queir%C3%B3s+50%2C+Viana+do+Castelo!5e0!3m2!1spt-PT!2spt!4v1"
           width="100%"
@@ -41,7 +43,7 @@ const Contact = () => (
           loading="lazy"
           title="Localização RT Francesinhas"
         />
-      </div>
+      </ScrollReveal>
     </div>
   </section>
 );

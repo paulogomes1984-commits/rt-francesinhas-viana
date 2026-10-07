@@ -13,14 +13,17 @@ const reviews = [
 const Reviews = () => (
   <section id="criticas" className="flex min-h-[115dvh] items-center px-6 py-24">
     <div className="max-w-6xl mx-auto">
-      <ScrollReveal className="text-center mb-16">
+      <ScrollReveal className="text-center">
         <p className="text-primary text-sm uppercase tracking-[0.3em] mb-4 font-semibold">Testemunhos</p>
+      </ScrollReveal>
+      <ScrollReveal className="text-center mb-16" delay={0.08}>
         <h2 className="text-4xl font-serif font-bold text-foreground">O que dizem os nossos clientes</h2>
       </ScrollReveal>
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
         {reviews.map((r, i) => (
           <ScrollReveal
             key={i}
+            delay={(i % 3) * 0.08}
             className="rounded-sm border border-border bg-card/90 p-6 backdrop-blur-sm transition-colors duration-300 hover:border-gold"
           >
             <div className="flex gap-1 mb-4">
