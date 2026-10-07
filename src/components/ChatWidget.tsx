@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { MessageCircle, X, Send } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 type Msg = { role: "user" | "assistant"; content: string };
 
@@ -97,23 +98,25 @@ const ChatWidget = () => {
   return (
     <>
       <div className="fixed bottom-6 right-6 z-50 flex flex-col-reverse items-end gap-3">
-        <button
+        <Button
           onClick={() => setOpen((o) => !o)}
           aria-label="Abrir chat"
+          size="icon"
           className="w-14 h-14 rounded-full bg-primary text-primary-foreground shadow-lg flex items-center justify-center hover:brightness-110 transition-all"
         >
           {open ? <X className="w-6 h-6" /> : <MessageCircle className="w-6 h-6" />}
-        </button>
+        </Button>
 
+        <Button asChild size="icon" className="w-14 h-14 rounded-full bg-primary text-primary-foreground shadow-lg hover:brightness-110 transition-all">
         <a
           href={`https://wa.me/${WHATSAPP_NUMBER}`}
           target="_blank"
           rel="noopener noreferrer"
           aria-label="Abrir WhatsApp"
-          className="w-14 h-14 rounded-full bg-[#25D366] text-white shadow-lg flex items-center justify-center hover:brightness-110 transition-all"
         >
           <WhatsAppIcon className="w-7 h-7" />
         </a>
+        </Button>
       </div>
 
       {open && (
@@ -150,14 +153,15 @@ const ChatWidget = () => {
               disabled={loading}
               className="flex-1 bg-warm-surface border border-border rounded-md px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary"
             />
-            <button
+            <Button
               onClick={send}
               disabled={loading || !input.trim()}
               className="w-10 h-10 flex items-center justify-center rounded-md bg-primary text-primary-foreground disabled:opacity-50 hover:brightness-110 transition"
               aria-label="Enviar"
+              size="icon"
             >
               <Send className="w-4 h-4" />
-            </button>
+            </Button>
           </div>
         </div>
       )}
