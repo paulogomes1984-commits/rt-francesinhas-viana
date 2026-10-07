@@ -1,8 +1,20 @@
 import { type ReactNode, useCallback, useEffect, useRef, useState } from "react";
-import sequenceAsset from "@/assets/rt-burger-scroll-sequence.jpg.asset.json";
-import posterAsset from "@/assets/rt-burger-scroll-poster.jpg.asset.json";
+import sheet00 from "@/assets/rt-burger-hq-sheet-00.jpg.asset.json";
+import sheet01 from "@/assets/rt-burger-hq-sheet-01.jpg.asset.json";
+import sheet02 from "@/assets/rt-burger-hq-sheet-02.jpg.asset.json";
+import sheet03 from "@/assets/rt-burger-hq-sheet-03.jpg.asset.json";
+import sheet04 from "@/assets/rt-burger-hq-sheet-04.jpg.asset.json";
+import sheet05 from "@/assets/rt-burger-hq-sheet-05.jpg.asset.json";
+import sheet06 from "@/assets/rt-burger-hq-sheet-06.jpg.asset.json";
+import sheet07 from "@/assets/rt-burger-hq-sheet-07.jpg.asset.json";
+import sheet08 from "@/assets/rt-burger-hq-sheet-08.jpg.asset.json";
+import sheet09 from "@/assets/rt-burger-hq-sheet-09.jpg.asset.json";
+import sheet10 from "@/assets/rt-burger-hq-sheet-10.jpg.asset.json";
+import posterAsset from "@/assets/rt-burger-hq-poster.jpg.asset.json";
 
-const LAST_FRAME = 24;
+const SHEETS = [sheet00, sheet01, sheet02, sheet03, sheet04, sheet05, sheet06, sheet07, sheet08, sheet09, sheet10];
+const LAST_FRAME = 274;
+const FRAMES_PER_SHEET = 25;
 const SPRITE_COLUMNS = 5;
 const FRAME_WIDTH = 800;
 const FRAME_HEIGHT = 450;
@@ -14,7 +26,9 @@ type InfoScrollSequenceProps = {
 const InfoScrollSequence = ({ children }: InfoScrollSequenceProps) => {
   const sectionRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const spriteRef = useRef<HTMLImageElement | null>(null);
+  const spritesRef = useRef(new Map<number, HTMLImageElement>());
+  const requestSheetRef = useRef<((index: number) => void) | null>(null);
+  const requestedFrameRef = useRef(0);
   const frameRef = useRef(-1);
   const rafRef = useRef<number | null>(null);
   const targetFrameRef = useRef(0);
@@ -24,7 +38,11 @@ const InfoScrollSequence = ({ children }: InfoScrollSequenceProps) => {
 
   const drawFrame = useCallback((frame: number) => {
     const canvas = canvasRef.current;
-    const sprite = spriteRef.current;
+    const index = Math.min(LAST_FRAME, Math.max(0, Math.round(frame)));
+    requestedFrameRef.current = index;
+    const sheetIndex = Math.floor(index / FRAMES_PER_SHEET);
+    requestSheetRef.current?.(sheetIndex);
+    const sprite = spritesRef.current.get(sheetIndex);
     if (!canvas || !sprite?.complete || sprite.naturalWidth === 0) return;
 
     const rect = canvas.getBoundingClientRect();
@@ -44,11 +62,11 @@ const InfoScrollSequence = ({ children }: InfoScrollSequenceProps) => {
     const drawHeight = FRAME_HEIGHT * scale;
     context.clearRect(0, 0, width, height);
     // Preserve the original sharp images instead of overlapping different poses.
-    const index = Math.min(LAST_FRAME, Math.max(0, Math.round(frame)));
+    const localIndex = index % FRAMES_PER_SHEET;
       context.drawImage(
         sprite,
-        (index % SPRITE_COLUMNS) * FRAME_WIDTH,
-        Math.floor(index / SPRITE_COLUMNS) * FRAME_HEIGHT,
+        (localIndex % SPRITE_COLUMNS) * FRAME_WIDTH,
+        Math.floor(localIndex / SPRITE_COLUMNS) * FRAME_HEIGHT,
         FRAME_WIDTH,
         FRAME_HEIGHT,
         (width - drawWidth) / 2,
@@ -67,18 +85,43 @@ const InfoScrollSequence = ({ children }: InfoScrollSequenceProps) => {
   }, []);
 
   useEffect(() => {
-    const sprite = new Image();
-    sprite.decoding = "async";
-    sprite.src = sequenceAsset.url;
-    sprite.onload = () => {
-      spriteRef.current = sprite;
-      const initialFrame = reducedMotion ? LAST_FRAME : 0;
-      frameRef.current = initialFrame;
-      drawFrame(initialFrame);
-      setLoaded(true);
+    let active = true;
+    const pending = new Set<number>();
+    const request = (index: number) => {
+      // Keep only the current sheet and its neighbours decoded on mobile.
+      for (const cached of spritesRef.current.keys()) {
+        if (Math.abs(cached - index) > 1) spritesRef.current.delete(cached);
+      }
+      for (const nearby of [index, index + 1, index - 1]) {
+        const asset = SHEETS[nearby];
+        if (!asset || spritesRef.current.has(nearby) || pending.has(nearby)) continue;
+        pending.add(nearby);
+        const sprite = new Image();
+        sprite.decoding = "async";
+        sprite.onload = async () => {
+          try { await sprite.decode(); } catch { /* onload already confirms usable pixels */ }
+          pending.delete(nearby);
+          if (!active) return;
+          const currentSheet = Math.floor(requestedFrameRef.current / FRAMES_PER_SHEET);
+          if (Math.abs(nearby - currentSheet) > 1) return;
+          spritesRef.current.set(nearby, sprite);
+          if (nearby === currentSheet) {
+            drawFrame(requestedFrameRef.current);
+            setLoaded(true);
+          }
+        };
+        sprite.onerror = () => pending.delete(nearby);
+        sprite.src = asset.url;
+      }
     };
+    requestSheetRef.current = request;
+    const initialFrame = reducedMotion ? LAST_FRAME : 0;
+    frameRef.current = initialFrame;
+    drawFrame(initialFrame);
     return () => {
-      sprite.onload = null;
+      active = false;
+      requestSheetRef.current = null;
+      spritesRef.current.clear();
     };
   }, [drawFrame, reducedMotion]);
 
