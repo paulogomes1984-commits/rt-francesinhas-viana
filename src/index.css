@@ -93,6 +93,8 @@
     --warm-bg: 20 18% 7%;
     --warm-surface: 20 15% 11%;
     --warm-surface-hover: 20 14% 16%;
+    --photo-mask-core: hsl(0 0% 0%);
+    --photo-mask-edge: hsl(0 0% 0% / 0);
 
     --gradient-gold: linear-gradient(135deg, hsl(30 75% 50%), hsl(28 60% 65%));
     --gradient-dark: linear-gradient(180deg, hsl(20 18% 7%), hsl(20 15% 4%));
@@ -126,6 +128,17 @@
 }
 
 @layer utilities {
+  .food-photo-feather {
+    -webkit-mask-image:
+      linear-gradient(to right, var(--photo-mask-edge), var(--photo-mask-core) 10%, var(--photo-mask-core) 90%, var(--photo-mask-edge)),
+      linear-gradient(to bottom, var(--photo-mask-edge), var(--photo-mask-core) 10%, var(--photo-mask-core) 90%, var(--photo-mask-edge));
+    mask-image:
+      linear-gradient(to right, var(--photo-mask-edge), var(--photo-mask-core) 10%, var(--photo-mask-core) 90%, var(--photo-mask-edge)),
+      linear-gradient(to bottom, var(--photo-mask-edge), var(--photo-mask-core) 10%, var(--photo-mask-core) 90%, var(--photo-mask-edge));
+    -webkit-mask-composite: source-in;
+    mask-composite: intersect;
+  }
+
   .text-gradient-gold {
     background: linear-gradient(135deg, hsl(30 75% 50%), hsl(28 60% 65%));
     -webkit-background-clip: text;
