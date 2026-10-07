@@ -1,9 +1,9 @@
 import { type ReactNode, useCallback, useEffect, useRef, useState } from "react";
-import sequenceAsset from "@/assets/rt-burger-scroll-sequence.jpg.asset.json";
+import sequenceAsset from "@/assets/rt-burger-fluid.jpg.asset.json";
 import posterAsset from "@/assets/rt-burger-scroll-poster.jpg.asset.json";
 
-const LAST_FRAME = 24;
-const SPRITE_COLUMNS = 5;
+const LAST_FRAME = 93;
+const SPRITE_COLUMNS = 10;
 const FRAME_WIDTH = 800;
 const FRAME_HEIGHT = 450;
 
@@ -43,10 +43,8 @@ const InfoScrollSequence = ({ children }: InfoScrollSequenceProps) => {
     const drawWidth = FRAME_WIDTH * scale;
     const drawHeight = FRAME_HEIGHT * scale;
     context.clearRect(0, 0, width, height);
-    const lower = Math.floor(frame);
-    const blend = frame - lower;
-    const paint = (index: number, opacity: number) => {
-      context.globalAlpha = opacity;
+    // Motion-compensated intermediate frames keep edges crisp; never crossfade poses.
+    const index = Math.min(LAST_FRAME, Math.max(0, Math.round(frame)));
       context.drawImage(
         sprite,
         (index % SPRITE_COLUMNS) * FRAME_WIDTH,
@@ -58,10 +56,6 @@ const InfoScrollSequence = ({ children }: InfoScrollSequenceProps) => {
         drawWidth,
         drawHeight,
       );
-    };
-    paint(lower, 1);
-    if (blend > 0 && lower < LAST_FRAME) paint(lower + 1, blend);
-    context.globalAlpha = 1;
   }, []);
 
   useEffect(() => {
@@ -97,7 +91,7 @@ const InfoScrollSequence = ({ children }: InfoScrollSequenceProps) => {
       const difference = targetFrameRef.current - current;
       const next = Math.abs(difference) < 0.005
         ? targetFrameRef.current
-        : current + difference * (1 - Math.exp(-elapsed / 85));
+        : current + difference * (1 - Math.exp(-elapsed / 50));
       frameRef.current = next;
       drawFrame(next);
       if (Math.abs(targetFrameRef.current - next) >= 0.005) {
